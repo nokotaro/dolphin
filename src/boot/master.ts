@@ -70,7 +70,6 @@ export async function masterMain() {
 
 	bootLogger.succ('Dolphin is ready for launch');
 
-	require('./services/server-stats').default();
 	require('./services/queue-stats').default();
 
 	if (!program.disableClustering) {
