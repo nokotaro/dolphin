@@ -6,9 +6,7 @@
 				<div class="banner" ref="banner" :style="style"></div>
 				<div class="fade"></div>
 				<div class="title">
-					<p class="name">
-						<dp-user-name :user="user" :nowrap="false"/>
-					</p>
+					<dp-user-name class="name" :user="user" :nowrap="true"/>
 					<div>
 						<span class="username"><dp-acct :user="user" :detail="true" /></span>
 						<span v-if="user.isBot" :title="$t('is-bot')"><fa icon="robot"/></span>
@@ -98,6 +96,7 @@ export default Vue.extend({
 		return {
 			user: null,
 			error: null,
+			parallaxAnimationId: null,
 			faEllipsisH
 		};
 	},
@@ -119,6 +118,13 @@ export default Vue.extend({
 		this.fetch();
 	},
 
+	mounted() {
+		window.requestAnimationFrame(this.parallax);
+		this.$once('hook:beforeDestroy', () => {
+			window.cancelAnimationFrame(this.parallaxAnimationId);
+		});
+	},
+
 	methods: {
 		fetch() {
 			Progress.start();
@@ -136,6 +142,24 @@ export default Vue.extend({
 				source: this.$refs.menu,
 				user: this.user
 			});
+		},
+
+		parallax() {
+			this.parallaxAnimationId = window.requestAnimationFrame(this.parallax);
+
+			const banner = this.$refs.banner as any;
+			if (banner == null) return;
+
+			const top = window.scrollY;
+
+			if (top < 0) return;
+
+			const z = 1.75; // 奥行き(小さいほど奥)
+			const pos = -(top / z);
+			banner.style.backgroundPosition = `center calc(50% - ${pos}px)`;
+
+			//const blur = top / 32
+			//if (blur <= 10) banner.style.filter = `blur(${blur}px)`;
 		},
 	}
 });
@@ -227,6 +251,7 @@ export default Vue.extend({
 				left: 0;
 				width: 100%;
 				padding: 0 0 8px 154px;
+				box-sizing: border-box;
 				color: #fff;
 
 				@media (max-width: 500px) {
@@ -319,9 +344,11 @@ export default Vue.extend({
 				margin: 0;
 				align-items: center;
 
+				&:not(:last-child) {
+					margin-bottom: 8px;
+				}
+
 				> .name {
-					padding: 4px;
-					margin: 4px;
 					width: 30%;
 					overflow: hidden;
 					white-space: nowrap;
@@ -331,8 +358,6 @@ export default Vue.extend({
 				}
 
 				> .value {
-					padding: 4px;
-					margin: 4px;
 					width: 70%;
 					overflow: hidden;
 					white-space: nowrap;

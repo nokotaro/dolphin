@@ -2,14 +2,14 @@
 
 <div>
 <h1 align="center">Dolphin</h1>
-<p align="center">Dolphin is a lightweight ActivityPub server optimized for single user  (or few users) use.</p>
+<p align="center">Dolphin is a lightweight ActivityPub server for personal (or team).</p>
 </div>
 
 <p align="center"><a href="https://www.patreon.com/syuilo"><img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" alt="Become a Patron!" width="160" /></a></p>
 
 ## 🍀 Why Dolphin
 Dolphin is a fork of [Misskey](https://github.com/syuilo/misskey) and a sister project of it.
-While inheriting features such as reaction and high performance, it has been optimized for single-user use. As a result, it is easier to use and lighter.
+While inheriting attractive features such as reaction and high performance, it has been optimized for single-user use. As a result, it is easier to use and lighter.
 
 Looking for a lightweight, high-performance ActivityPub server? Want to use Misskey, but is it heavy to use alone? Try Dolphin.
 
@@ -94,6 +94,15 @@ X axis represents seconds. Lower is better.
 <img src="http://drive.google.com/uc?export=view&id=1EoVg4R_npLYqmQz5xoxxWb_AQkM4zTF4" alt="">
 
 ## 📦 Install
+
+### Create Dolphin user
+Running dolphin as root is not a good idea so we need to create another user for that
+
+For example:
+```
+adduser --disabled-password --disabled-login dolphin
+```
+
 ### Install dependencies
 Please install and setup these softwares:
 
@@ -103,15 +112,19 @@ Please install and setup these softwares:
 
 ### Install Dolphin
 
-1. Clone the Dolphin repo
+1. Connect to Dolphin user
+
+	`su - dolphin`
+
+2. Clone the Dolphin repo
 
 	`git clone -b master git://github.com/syuilo/dolphin.git`
 
-2. Navigate to Dolphin directory
+3. Navigate to Dolphin directory
 
 	`cd dolphin`
 
-3. Install Dolphin dependencies.
+4. Install Dolphin dependencies.
 
 	`npm i`
 

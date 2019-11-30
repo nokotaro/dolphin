@@ -166,7 +166,7 @@ export default Vue.extend({
 			}).then(res => {
 				this.$root.dialog({
 					type: 'success',
-					splash: true
+					iconOnly: true, autoClose: true
 				});
 				this.$store.commit('device/set', {
 					key: 'accounts',
@@ -202,7 +202,7 @@ export default Vue.extend({
 			await this.$root.api('users/lists/create', { name: name });
 			this.$root.dialog({
 				type: 'success',
-				splash: true
+				iconOnly: true, autoClose: true
 			});
 		},
 
@@ -299,13 +299,21 @@ export default Vue.extend({
 
 	> .notifications {
 		position: fixed;
-		top: 16px;
-		left: 0;
-		right: 0;
+		top: 32px;
+		right: 7rem;
 		margin: 0 auto;
 		z-index: 10001;
 		width: 290px;
-		height: 300px;
+		height: 305px;
+		
+		@media (max-width: 849px) {
+			left: 0;
+			right: 0;
+		}
+
+		@media (max-width: 849px) and (orientation: landscape) {
+			height: 230px;
+		}
 	}
 
 	> .buttons {
