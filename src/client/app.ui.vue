@@ -21,7 +21,6 @@
 				<router-link to="/instance/emojis"><fa :icon="faLaugh" fixed-width/>{{ $t('customEmojis') }}</router-link>
 				<router-link to="/instance/users"><fa :icon="faUsers" fixed-width/>{{ $t('users') }}</router-link>
 				<router-link to="/instance/files"><fa :icon="faCloud" fixed-width/>{{ $t('files') }}</router-link>
-				<router-link to="/instance/monitor"><fa :icon="faTachometerAlt" fixed-width/>{{ $t('monitor') }}</router-link>
 				<router-link to="/instance/queue"><fa :icon="faExchangeAlt" fixed-width/>{{ $t('jobQueue') }}</router-link>
 				<router-link to="/federation"><fa :icon="faGlobe" fixed-width/>{{ $t('federation') }}</router-link>
 				<div></div>
