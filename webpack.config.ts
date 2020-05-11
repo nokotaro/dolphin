@@ -3,9 +3,7 @@
  */
 
 import * as webpack from 'webpack';
-import * as chalk from 'chalk';
 const { VueLoaderPlugin } = require('vue-loader');
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
@@ -105,10 +103,7 @@ module.exports = {
 		}]
 	},
 	plugins: [
-		new ProgressBarPlugin({
-			format: chalk`  {cyan.bold Yes we can} {bold [}:bar{bold ]} {green.bold :percent} {gray :elapseds}`,
-			clear: false
-		}),
+		new webpack.ProgressPlugin({}),
 		new webpack.DefinePlugin({
 			_VERSION_: JSON.stringify(meta.version),
 			_LANGS_: JSON.stringify(Object.entries(locales).map(([k, v]: [string, any]) => [k, v && v.meta && v.meta.lang])),
@@ -118,8 +113,7 @@ module.exports = {
 	],
 	output: {
 		path: __dirname + '/built/client/assets',
-		filename: '[name].js',
-		chunkFilename: '[hash:5].[id].js',
+		filename: `[name].js`,
 		publicPath: `/assets/`
 	},
 	resolve: {
@@ -137,9 +131,16 @@ module.exports = {
 		moment: 'moment'
 	},
 	optimization: {
-		minimizer: [new TerserPlugin()]
+		minimizer: [new TerserPlugin({
+			parallel: 1
+		})]
 	},
-	cache: true,
+	cache: {
+		type: 'filesystem',
+		buildDependencies: {
+			config: [__filename]
+		}
+	},
 	devtool: false, //'source-map',
 	mode: isProduction ? 'production' : 'development'
 };

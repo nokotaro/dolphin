@@ -47,8 +47,14 @@ app.use(async (ctx, next) => {
 // Init router
 const router = new Router();
 
-//#region static assets
+router.get('/assets/app.js', async ctx => {
+	await send(ctx as any, ctx.path, {
+		root: client,
+		maxage: 0,
+	});
+});
 
+//#region static assets
 router.get('/assets/*', async ctx => {
 	await send(ctx as any, ctx.path, {
 		root: client,

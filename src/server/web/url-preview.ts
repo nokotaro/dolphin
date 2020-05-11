@@ -1,27 +1,25 @@
 import * as Koa from 'koa';
-import * as request from 'request-promise-native';
 import summaly from 'summaly';
+import { fetchMeta } from '../../misc/fetch-meta';
 import Logger from '../../services/logger';
 import config from '../../config';
 import { query } from '../../prelude/url';
+import { getJson } from '../../misc/fetch';
 
 const logger = new Logger('url-preview');
 
 module.exports = async (ctx: Koa.Context) => {
-	logger.info(config.summalyProxy
+	const meta = await fetchMeta();
+
+	logger.info(meta.summalyProxy
 		? `(Proxy) Getting preview of ${ctx.query.url}@${ctx.query.lang} ...`
 		: `Getting preview of ${ctx.query.url}@${ctx.query.lang} ...`);
 
 	try {
-		const summary = config.summalyProxy ? await request.get({
-			url: config.summalyProxy,
-			qs: {
-				url: ctx.query.url,
-				lang: ctx.query.lang || 'ja-JP'
-			},
-			forever: true,
-			json: true
-		}) : await summaly(ctx.query.url, {
+		const summary = meta.summalyProxy ? await getJson(`${meta.summalyProxy}?${query({
+			url: ctx.query.url,
+			lang: ctx.query.lang || 'ja-JP'
+		})}`) : await summaly(ctx.query.url, {
 			followRedirects: false,
 			lang: ctx.query.lang || 'ja-JP'
 		});

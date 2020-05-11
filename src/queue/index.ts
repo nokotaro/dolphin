@@ -12,8 +12,9 @@ import procesObjectStorage from './processors/object-storage';
 import { queueLogger } from './logger';
 import { DriveFile } from '../models/entities/drive-file';
 import { getJobInfo } from './get-job-info';
+import { IActivity } from '../remote/activitypub/type';
 
-function initializeQueue(name: string) {
+function initializeQueue(name: string, limitPerSec = -1) {
 	return new Queue(name, {
 		redis: {
 			port: config.redis.port,
@@ -21,20 +22,30 @@ function initializeQueue(name: string) {
 			password: config.redis.pass,
 			db: config.redis.db || 0,
 		},
-		prefix: config.redis.prefix ? `${config.redis.prefix}:queue` : 'queue'
+		prefix: config.redis.prefix ? `${config.redis.prefix}:queue` : 'queue',
+		limiter: limitPerSec > 0 ? {
+			max: limitPerSec * 1,
+			duration: 1000
+		} : undefined
 	});
 }
 
+export type InboxJobData = {
+	activity: IActivity,
+	/** HTTP-Signature */
+	signature: httpSignature.IParsedSignature
+};
+
 function renderError(e: Error): any {
 	return {
-		stack: e.stack,
-		message: e.message,
-		name: e.name
+		stack: e?.stack,
+		message: e?.message,
+		name: e?.name
 	};
 }
 
-export const deliverQueue = initializeQueue('deliver');
-export const inboxQueue = initializeQueue('inbox');
+export const deliverQueue = initializeQueue('deliver', config.deliverJobPerSec || 128);
+export const inboxQueue = initializeQueue('inbox', config.inboxJobPerSec || 16);
 export const dbQueue = initializeQueue('db');
 export const objectStorageQueue = initializeQueue('objectStorage');
 
@@ -85,7 +96,7 @@ export function deliver(user: ILocalUser, content: any, to: any) {
 	};
 
 	return deliverQueue.add(data, {
-		attempts: 8,
+		attempts: config.deliverJobMaxAttempts || 12,
 		backoff: {
 			type: 'exponential',
 			delay: 60 * 1000
@@ -102,10 +113,10 @@ export function inbox(activity: any, signature: httpSignature.IParsedSignature) 
 	};
 
 	return inboxQueue.add(data, {
-		attempts: 8,
+		attempts: config.inboxJobMaxAttempts || 8,
 		backoff: {
 			type: 'exponential',
-			delay: 1000
+			delay: 60 * 1000
 		},
 		removeOnComplete: true,
 		removeOnFail: true

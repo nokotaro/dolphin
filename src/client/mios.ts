@@ -130,7 +130,7 @@ export default class MiOS extends EventEmitter {
 		} else {
 			// Get token from localStorage
 			const i = localStorage.getItem('i');
-			
+
 			fetchme(i, me => {
 				if (me) {
 					this.store.dispatch('login', me);

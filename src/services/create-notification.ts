@@ -56,7 +56,7 @@ export async function createNotification(
 				return;
 			}
 			//#endregion
-	
+
 			publishMainStream(notifieeId, 'unreadNotification', packed);
 
 			pushSw(notifieeId, 'notification', packed);

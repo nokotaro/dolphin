@@ -27,8 +27,8 @@ export async function renderPerson(user: ILocalUser) {
 		identifier?: IIdentifier
 	}[] = [];
 
-	if (profile.fields) {
-		for (const field of profile.fields) {
+	if (profile!.fields) {
+		for (const field of profile!.fields) {
 			attachment.push({
 				type: 'PropertyValue',
 				name: field.name,
@@ -64,12 +64,12 @@ export async function renderPerson(user: ILocalUser) {
 		url: `${config.url}/@${user.username}`,
 		preferredUsername: user.username,
 		name: user.name,
-		summary: toHtml(parse(profile.description)),
+		summary: toHtml(parse(profile!.description)),
 		icon: avatar ? renderImage(avatar) : null,
 		image: banner ? renderImage(banner) : null,
 		tag,
 		manuallyApprovesFollowers: user.isLocked,
-		publicKey: renderKey(user, keypair),
+		publicKey: renderKey(user, keypair, `#main-key`),
 		attachment: attachment.length ? attachment : undefined
 	};
 }
