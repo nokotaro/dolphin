@@ -106,7 +106,7 @@ adduser --disabled-password --disabled-login dolphin
 ### Install dependencies
 Please install and setup these softwares:
 
-* **[Node.js](https://nodejs.org/en/)** >= 11.7.0
+* **[Node.js](https://nodejs.org/en/)** >= 11.10.1
 * **[PostgreSQL](https://www.postgresql.org/)** >= 10
 * **[Redis](https://redis.io/)**
 
@@ -118,7 +118,7 @@ Please install and setup these softwares:
 
 2. Clone the Dolphin repo
 
-	`git clone -b master git://github.com/syuilo/dolphin.git`
+	`git clone -b master https://github.com/mei23/dolphin.git`
 
 3. Navigate to Dolphin directory
 

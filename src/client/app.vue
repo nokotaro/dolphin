@@ -15,7 +15,7 @@
 		</transition>
 		<div class="powerd-by" :class="{ visible: !$store.getters.isSignedIn }">
 			<b><router-link to="/">{{ host }}</router-link></b>
-			<small>Powered by <a href="https://github.com/syuilo/dolphin" target="_blank">Dolphin</a></small>
+			<small>Powered by <a href="https://github.com/mei23/dolphin" target="_blank">Dolphin</a></small>
 		</div>
 	</main>
 	<x-ui/>
