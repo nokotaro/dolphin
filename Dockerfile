@@ -39,4 +39,4 @@ COPY --from=builder /dolphin/node_modules ./node_modules
 COPY --from=builder /dolphin/built ./built
 COPY . ./
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "migrateandstart"]
