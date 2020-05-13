@@ -8,6 +8,7 @@ export const router = new VueRouter({
 	mode: 'history',
 	routes: [
 		{ path: '/', name: 'index', component: DpIndex },
+		{ path: '/global', name: 'global', component: () => import('./pages/index.global.vue').then(m => m.default) },
 		{ path: '/@:user', name: 'user', component: () => import('./pages/user/index.vue').then(m => m.default), children: [
 			{ path: 'following', name: 'userFollowing', component: () => import('./pages/user/follow-list.vue').then(m => m.default), props: { type: 'following' } },
 			{ path: 'followers', name: 'userFollowers', component: () => import('./pages/user/follow-list.vue').then(m => m.default), props: { type: 'followers' } },

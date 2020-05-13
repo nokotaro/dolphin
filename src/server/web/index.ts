@@ -50,7 +50,7 @@ const router = new Router();
 router.get('/assets/*', async ctx => {
 	await send(ctx as any, ctx.path, {
 		root: client,
-		maxage: 0,	// TODO
+		maxage: 86400,
 	});
 });
 
@@ -230,6 +230,7 @@ router.get('/info', async ctx => {
 router.get('*', async ctx => {
 	const meta = await fetchMeta();
 	await ctx.render('base', {
+		version: pkg.version,
 		img: meta.bannerUrl,
 		title: config.name,
 		instanceName: config.name,

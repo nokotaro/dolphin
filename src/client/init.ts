@@ -74,8 +74,10 @@ if (isMobile) {
 //#region Fetch locale data
 const cachedLocale = localStorage.getItem('locale');
 
+const t = new Date().getTime();
+
 if (cachedLocale == null) {
-	fetch(`/assets/locales/${lang}.json`)
+	fetch(`/assets/locales/${lang}.json?${t}`)
 		.then(response => response.json()).then(locale => {
 			localStorage.setItem('locale', JSON.stringify(locale));
 			i18n.locale = lang;
@@ -84,7 +86,7 @@ if (cachedLocale == null) {
 } else {
 	// TODO: 古い時だけ更新
 	setTimeout(() => {
-		fetch(`/assets/locales/${lang}.json`)
+		fetch(`/assets/locales/${lang}.json?${t}`)
 			.then(response => response.json()).then(locale => {
 				localStorage.setItem('locale', JSON.stringify(locale));
 			});
