@@ -1,0 +1,19 @@
+[Unit]
+Description=dolphin
+After=network.target
+
+[Service]
+Type=simple
+User=dolphin
+ExecStart=/usr/bin/npm start
+WorkingDirectory=/home/dolphin/dolphin
+Environment="NODE_ENV=production"
+ExecReload=/bin/kill -SIGUSR1 $MAINPID
+TimeoutSec=60
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=dolphin
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

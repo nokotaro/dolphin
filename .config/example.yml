@@ -20,48 +20,8 @@ maintainerEmail: ''
 # Final accessible URL seen by a user.
 url: https://example.tld/
 
-# ONCE YOU HAVE STARTED THE INSTANCE, DO NOT CHANGE THE
-# URL SETTINGS AFTER THAT!
-
-#   ┌───────────────────────┐
-#───┘ Port and TLS settings └───────────────────────────────────
-
-#
-# Dolphin supports two deployment options for public.
-#
-
-# Option 1: With Reverse Proxy
-#
-#                 +----- https://example.tld/ ------------+
-#   +------+      |+-------------+      +----------------+|
-#   | User | ---> || Proxy (443) | ---> | Dolphin (3000) ||
-#   +------+      |+-------------+      +----------------+|
-#                 +---------------------------------------+
-#
-#   You need to setup reverse proxy. (eg. nginx)
-#   You do not define 'https' section.
-
-# Option 2: Standalone
-#
-#                 +- https://example.tld/ -+
-#   +------+      |   +---------------+    |
-#   | User | ---> |   | Dolphin (443) |    |
-#   +------+      |   +---------------+    |
-#                 +------------------------+
-#
-#   You need to run Dolphin as root.
-#   You need to set Certificate in 'https' section.
-
-# To use option 1, uncomment below line.
-#port: 3000    # A port that your Dolphin server should listen.
-
-# To use option 2, uncomment below lines.
-#port: 443
-
-#https:
-#  # path for certification
-#  key: /etc/letsencrypt/live/example.tld/privkey.pem
-#  cert: /etc/letsencrypt/live/example.tld/fullchain.pem
+# Listen port
+port: 3000
 
 #   ┌──────────────────────────┐
 #───┘ PostgreSQL configuration └────────────────────────────────
@@ -184,19 +144,16 @@ id: 'aid'
 #clusterLimit: 1
 
 # Job concurrency per worker
-# deliverJobConcurrency: 128;
-# inboxJobConcurrency: 16;
+# deliverJobConcurrency: 64
+# inboxJobConcurrency: 8
 
 # Job rate limiter
-# deliverJobPerSec: 128
-# inboxJobPerSec: 16
+# deliverJobPerSec: 64
+# inboxJobPerSec: 8
 
 # Job attempts
 # deliverJobMaxAttempts: 12
 # inboxJobMaxAttempts: 8
-
-# IP address family used for outgoing request (ipv4, ipv6 or dual)
-#outgoingAddressFamily: ipv4
 
 # Syslog option
 #syslog:

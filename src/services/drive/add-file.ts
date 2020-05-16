@@ -248,7 +248,7 @@ export default async function(
 		logger.debug(`drive usage is ${usage} (max: ${driveCapacity})`);
 
 		// If usage limit exceeded
-		if (usage + size > driveCapacity) {
+		if (usage + info.size > driveCapacity) {
 			if (Users.isLocalUser(user)) {
 				throw new Error('no-free-space');
 			} else {
