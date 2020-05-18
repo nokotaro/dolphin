@@ -32,11 +32,6 @@ export default class extends Channel {
 			});
 		}
 
-		// 返信は除外
-		if (note.reply) {
-			return;
-		}
-
 		// 流れてきたNoteがミュートしているユーザーが関わるものだったら無視する
 		if (shouldMuteThisNote(note, this.muting)) return;
 

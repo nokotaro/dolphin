@@ -8,6 +8,7 @@ User=dolphin
 ExecStart=/usr/bin/npm start
 WorkingDirectory=/home/dolphin/dolphin
 Environment="NODE_ENV=production"
+#Environment="MK_DISABLE_CLUSTERING=1"
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 TimeoutSec=60
 StandardOutput=syslog
