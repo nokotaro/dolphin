@@ -1,7 +1,7 @@
 {
 	"name": "dolphin",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "1.4.0-20200517174131",
+	"version": "1.4.0-20200604082908",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mei23/dolphin.git"
@@ -157,7 +157,7 @@
 		"speakeasy": "2.0.0",
 		"stringz": "2.1.0",
 		"style-loader": "1.2.1",
-		"summaly": "2.3.1",
+		"summaly": "2.4.0",
 		"syslog-pro": "1.0.0",
 		"systeminformation": "4.26.5",
 		"terser-webpack-plugin": "2.3.6",
