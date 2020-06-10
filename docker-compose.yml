@@ -12,6 +12,8 @@ services:
     networks:
       - internal_network
       - external_network
+    volumes:
+      - ./files:/dolphin/files
 
   redis:
     restart: always
