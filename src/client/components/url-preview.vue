@@ -3,10 +3,8 @@
 	<button class="disablePlayer" @click="playerEnabled = false" :title="$t('disable-player')"><fa icon="times"/></button>
 	<iframe :src="player.url + (player.url.match(/\?/) ? '&autoplay=1&auto_play=1' : '?autoplay=1&auto_play=1')" :width="player.width || '100%'" :heigth="player.height || 250" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen />
 </div>
-<div v-else-if="tweetUrl && detail" class="twitter">
-	<blockquote ref="tweet" class="twitter-tweet" :data-theme="$store.state.device.darkmode ? 'dark' : null">
-		<a :href="url"></a>
-	</blockquote>
+<div v-else-if="tweetId && tweetExpanded" class="twitter" ref="twitter">
+	<iframe ref="tweet" scrolling="no" frameborder="no" :style="{ position: 'relative', left: `${tweetLeft}px`, width: `${tweetLeft < 0 ? 'auto' : '100%'}`, height: `${tweetHeight}px` }" :src="`https://platform.twitter.com/embed/index.html?embedId=${embedId}&amp;hideCard=false&amp;hideThread=false&amp;lang=en&amp;theme=${$store.state.device.darkMode ? 'dark' : 'light'}&amp;id=${tweetId}`"></iframe>
 </div>
 <div v-else class="dp-url-preview">
 	<transition name="zoom" mode="out-in">
@@ -26,6 +24,11 @@
 			</article>
 		</component>
 	</transition>
+	<div class="expandTweet" v-if="tweetId">
+		<a @click="tweetExpanded = true">
+			<fa :icon="faTwitter"/> {{ $t('expandTweet') }}
+		</a>
+	</div>
 </div>
 </template>
 
@@ -33,6 +36,7 @@
 import Vue from 'vue';
 import { faPlayCircle } from '@fortawesome/free-regular-svg-icons';
 import i18n from '../i18n';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'; 
 import { url as local, lang } from '../config';
 
 export default Vue.extend({
@@ -77,43 +81,30 @@ export default Vue.extend({
 				width: null,
 				height: null
 			},
-			tweetUrl: null,
+			tweetId: null,
+			tweetExpanded: this.detail,
+			embedId: `embed${Math.random().toString().replace(/\D/,'')}`,
+			tweetHeight: 150,
+ 			tweetLeft: 0,
 			playerEnabled: false,
 			self: isSelf,
 			hasRoute: hasRoute,
 			attr: hasRoute ? 'to' : 'href',
 			target: hasRoute ? null : '_blank',
-			faPlayCircle
+			faPlayCircle, faTwitter
 		};
 	},
 
 	created() {
 		const requestUrl = new URL(this.url);
 
-		if (this.detail && requestUrl.hostname == 'twitter.com' && /^\/.+\/status(es)?\/\d+/.test(requestUrl.pathname)) {
-			this.tweetUrl = requestUrl;
-			const twttr = (window as any).twttr || {};
-			const loadTweet = () => twttr.widgets.load(this.$refs.tweet);
-
-			if (twttr.widgets) {
-				Vue.nextTick(loadTweet);
-			} else {
-				const wjsId = 'twitter-wjs';
-				if (!document.getElementById(wjsId)) {
-					const head = document.getElementsByTagName('head')[0];
-					const script = document.createElement('script');
-					script.setAttribute('id', wjsId);
-					script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
-					head.appendChild(script);
-				}
-				twttr.ready = loadTweet;
-				(window as any).twttr = twttr;
-			}
-			return;
+		if (requestUrl.hostname == 'twitter.com') {
+			const m = requestUrl.pathname.match(/^\/.+\/status(?:es)?\/(\d+)/);
+			if (m) this.tweetId = m[1];
 		}
 
-		if (requestUrl.hostname === 'music.youtube.com') {
-			requestUrl.hostname = 'youtube.com';
+		if (requestUrl.hostname === 'music.youtube.com' && requestUrl.pathname.match('^/(?:watch|channel)')) {
+			requestUrl.hostname = 'www.youtube.com';
 		}
 
 		const requestLang = (lang || 'ja-JP').replace('ja-KS', 'ja-JP');
@@ -132,7 +123,32 @@ export default Vue.extend({
 				this.player = info.player;
 			})
 		});
-	}
+
+		(window as any).addEventListener('message', this.adjustTweetHeight);
+	},
+
+	mounted() {
+		// 300pxないと絶対右にはみ出るので左に移動してしまう
+		const areaWidth = (this.$el as any)?.clientWidth;
+		if (areaWidth && areaWidth < 300) this.tweetLeft = areaWidth - 241;
+		console.log(`areaWidth: ${areaWidth}`);
+		console.log(`this.tweetLeft: ${this.tweetLeft}`);
+	},
+
+	methods: {
+		adjustTweetHeight(message: any) {
+			if (message.origin !== 'https://platform.twitter.com') return;
+			const embed = message.data?.['twttr.embed'];
+			if (embed?.method !== 'twttr.private.resize') return;
+			if (embed?.id !== this.embedId) return;
+			const height = embed?.params[0]?.height;
+			if (height) this.tweetHeight = height;
+ 		},
+	},
+
+	beforeDestroy() {
+		(window as any).removeEventListener('message', this.adjustTweetHeight);
+	},
 });
 </script>
 

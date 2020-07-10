@@ -203,6 +203,9 @@ relays: "リレー"
 addRelay: "リレーの追加"
 inboxUrl: "inboxのURL"
 addedRelays: "追加済みのリレー"
+enable-player: "プレイヤーを開く"
+disable-player: "プレイヤーを閉じる"
+expandTweet: "ツイートを展開する"
 
 _cw:
   hide: "隠す"

@@ -1,12 +1,12 @@
 import { publishNoteStream } from '../../stream';
-import renderLike from '../../../remote/activitypub/renderer/like';
+import { renderLike } from '../../../remote/activitypub/renderer/like';
 import { deliver } from '../../../queue';
 import { renderActivity } from '../../../remote/activitypub/renderer';
 import { IdentifiableError } from '../../../misc/identifiable-error';
-import { toDbReaction } from '../../../misc/reaction-lib';
+import { toDbReaction, decodeReaction } from '../../../misc/reaction-lib';
 import { User } from '../../../models/entities/user';
 import { Note } from '../../../models/entities/note';
-import { NoteReactions, Users, Notes } from '../../../models';
+import { NoteReactions, Users, Notes, Emojis } from '../../../models';
 import { perUserReactionsChart } from '../../chart';
 import { genId } from '../../../misc/gen-id';
 import { NoteReaction } from '../../../models/entities/note-reaction';
@@ -19,10 +19,10 @@ export default async (user: User, note: Note, reaction?: string) => {
 		throw new IdentifiableError('2d8e7297-1873-4c00-8404-792c68d7bef0', 'cannot react to my note');
 	}
 
-	reaction = await toDbReaction(reaction);
+	reaction = await toDbReaction(reaction, user.host);
 
 	// Create reaction
-	await NoteReactions.save({
+	const inserted = await NoteReactions.save({
 		id: genId(),
 		createdAt: new Date(),
 		noteId: note.id,
@@ -48,8 +48,27 @@ export default async (user: User, note: Note, reaction?: string) => {
 
 	perUserReactionsChart.update(user, note);
 
+	// カスタム絵文字リアクションだったら絵文字情報も送る
+	const decodedReaction = decodeReaction(reaction);
+
+	let emoji = await Emojis.findOne({
+		where: {
+			name: decodedReaction.name,
+			host: decodedReaction.host
+		},
+		select: ['name', 'host', 'url']
+	});
+
+	if (emoji) {
+		emoji = {
+			name: emoji.host ? `${emoji.name}@${emoji.host}` : `${emoji.name}@.`,
+			url: emoji.url
+		} as any;
+	}
+
 	publishNoteStream(note.id, 'reacted', {
-		reaction: reaction,
+		reaction: decodedReaction.reaction,
+		emoji: emoji,
 		userId: user.id
 	});
 
@@ -64,7 +83,7 @@ export default async (user: User, note: Note, reaction?: string) => {
 	//#region 配信
 	// リアクターがローカルユーザーかつリアクション対象がリモートユーザーの投稿なら配送
 	if (Users.isLocalUser(user) && note.userHost !== null) {
-		const content = renderActivity(renderLike(user, note, reaction));
+		const content = renderActivity(await renderLike(inserted, note));
 		Users.findOne(note.userId).then(u => {
 			deliver(user, content, u!.inbox);
 		});

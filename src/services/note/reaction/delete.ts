@@ -1,5 +1,5 @@
 import { publishNoteStream } from '../../stream';
-import renderLike from '../../../remote/activitypub/renderer/like';
+import { renderLike } from '../../../remote/activitypub/renderer/like';
 import renderUndo from '../../../remote/activitypub/renderer/undo';
 import { renderActivity } from '../../../remote/activitypub/renderer';
 import { deliver } from '../../../queue';
@@ -7,6 +7,7 @@ import { IdentifiableError } from '../../../misc/identifiable-error';
 import { User } from '../../../models/entities/user';
 import { Note } from '../../../models/entities/note';
 import { NoteReactions, Users, Notes } from '../../../models';
+import { decodeReaction } from '../../../misc/reaction-lib';
 
 export default async (user: User, note: Note) => {
 	// if already unreacted
@@ -32,14 +33,14 @@ export default async (user: User, note: Note) => {
 		.execute();
 
 	publishNoteStream(note.id, 'unreacted', {
-		reaction: exist.reaction,
+		reaction: decodeReaction(exist.reaction).reaction,
 		userId: user.id
 	});
 
 	//#region 配信
 	// リアクターがローカルユーザーかつリアクション対象がリモートユーザーの投稿なら配送
 	if (Users.isLocalUser(user) && (note.userHost !== null)) {
-		const content = renderActivity(renderUndo(renderLike(user, note, exist.reaction), user));
+		const content = renderActivity(renderUndo(await renderLike(exist, note), user));
 		Users.findOne(note.userId).then(u => {
 			deliver(user, content, u!.inbox);
 		});
