@@ -144,12 +144,6 @@ module.exports = {
 			parallel: 1
 		})]
 	},
-	cache: {
-		type: 'filesystem',
-		buildDependencies: {
-			config: [__filename]
-		}
-	},
 	devtool: false, //'source-map',
 	mode: isProduction ? 'production' : 'development'
 };
