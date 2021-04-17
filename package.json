@@ -23,7 +23,7 @@
 		"test": "TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true TS_NODE_COMPILER_OPTIONS=\"{\\\"target\\\":\\\"es2017\\\",\\\"module\\\":\\\"commonjs\\\",\\\"typeRoots\\\":[\\\"node_modules/@types\\\",\\\"src/@types\\\"]}\" mocha"
 	},
 	"resolutions": {
-		"lodash": "^4.17.20",
+		"lodash": "^4.17.21",
 		"dot-prop": "^5.2.0",
 		"gulp/gulp-cli/yargs/yargs-parser": "5.0.0-security.0",
 		"jsonld/rdf-canonize/node-forge": "0.10.0"
