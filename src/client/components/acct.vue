@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { toUnicode } from 'punycode';
+import { toUnicode } from 'punycode/';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { host } from '../config';
 

@@ -53,7 +53,7 @@ import { faTimes, faUpload, faChartPie, faGlobe, faHome, faUnlock, faEnvelope, f
 import { faEyeSlash, faLaugh } from '@fortawesome/free-regular-svg-icons';
 import insertTextAtCursor from 'insert-text-at-cursor';
 import { length } from 'stringz';
-import { toASCII } from 'punycode';
+import { toASCII } from 'punycode/';
 import i18n from '../i18n';
 import DpVisibilityChooser from './visibility-chooser.vue';
 import DpUserSelect from './user-select.vue';

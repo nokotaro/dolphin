@@ -1,4 +1,4 @@
-import { toUnicode } from 'punycode';
+import { toUnicode } from 'punycode/';
 import { MfmForest, createLeaf, MfmNode, urlRegex } from './prelude';
 import { normalize } from './normalize';
 import parseAcct from '../misc/acct/parse';
