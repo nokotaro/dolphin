@@ -1,7 +1,7 @@
 {
 	"name": "dolphin",
 	"author": "syuilo <i@syuilo.com>",
-	"version": "1.4.0-20201224182405",
+	"version": "1.4.0-20210418072831",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mei23/dolphin.git"
