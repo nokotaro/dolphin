@@ -96,7 +96,7 @@
 		"content-disposition": "0.5.3",
 		"css-loader": "6.6.0",
 		"cssnano": "5.0.17",
-		"dateformat": "4.5.1",
+		"dateformat": "5.0.3",
 		"escape-regexp": "0.0.1",
 		"eventemitter3": "4.0.7",
 		"feed": "4.2.2",
