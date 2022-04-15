@@ -116,6 +116,10 @@ export async function fetchPerson(uri: string, resolver?: Resolver): Promise<Use
 export async function createPerson(uri: string, resolver?: Resolver): Promise<User> {
 	if (typeof uri !== 'string') throw new Error('uri is not string');
 
+	if (uri.startsWith(config.url)) {
+		throw new Error('cannot resolve local user');
+	}
+
 	if (resolver == null) resolver = new Resolver();
 
 	const object = await resolver.resolve(uri) as any;

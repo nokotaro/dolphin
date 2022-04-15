@@ -9,7 +9,6 @@ import * as rimraf from 'rimraf';
 import * as rename from 'gulp-rename';
 const cleanCSS = require('gulp-clean-css');
 const sass = require('gulp-dart-sass');
-const fiber = require('fibers');
 
 const locales = require('./locales');
 
@@ -57,7 +56,7 @@ gulp.task('cleanall', gulp.parallel('clean', cb =>
 
 gulp.task('build:client:styles', () =>
 	gulp.src('./src/client/style.scss')
-		.pipe(sass({ fiber }))
+		.pipe(sass())
 		.pipe(cleanCSS())
 		.pipe(gulp.dest('./built/client/assets/'))
 );

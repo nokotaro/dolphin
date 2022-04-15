@@ -20,9 +20,9 @@
 					<fa :icon="faQuestionCircle" v-if="type === 'question'"/>
 					<fa :icon="faSpinner" pulse v-if="type === 'waiting'"/>
 				</div>
-				<header v-if="title" v-html="title"></header>
+				<header v-if="title">{{ title }}</header>
 				<header v-if="title == null && user">{{ $t('enterUsername') }}</header>
-				<div class="body" v-if="text" v-html="text"></div>
+				<div class="body" v-if="text">{{ text }}</div>
 				<x-input v-if="input" v-model="inputValue" autofocus :type="input.type || 'text'" :placeholder="input.placeholder" @keydown="onInputKeydown"></x-input>
 				<x-input v-if="user" v-model="userInputValue" autofocus @keydown="onInputKeydown"><template #prefix>@</template></x-input>
 				<x-select v-if="select" v-model="selectedValue" autofocus>

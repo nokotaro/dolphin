@@ -1,5 +1,6 @@
 import * as promiseLimit from 'promise-limit';
 
+import config from '../../../config';
 import Resolver from '../resolver';
 import post from '../../../services/note/create';
 import { resolvePerson, updatePerson } from './person';
@@ -272,6 +273,10 @@ export async function resolveNote(value: string | IObject, resolver?: Resolver):
 			return exist;
 		}
 		//#endregion
+
+		if (uri.startsWith(config.url)) {
+			throw new Error('cannot resolve local note');
+		}
 
 		// リモートサーバーからフェッチしてきて登録
 		// ここでuriの代わりに添付されてきたNote Objectが指定されていると、サーバーフェッチを経ずにノートが生成されるが
