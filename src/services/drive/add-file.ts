@@ -89,12 +89,12 @@ async function save(file: DriveFile, path: string, name: string, type: string, h
 		const accessKey = uuid();
 		const thumbnailAccessKey = 'thumbnail-' + uuid();
 
-		const url = InternalStorage.saveFromPath(accessKey, path);
+		const url = await InternalStorage.saveFromPathAsync(accessKey, path);
 
 		let thumbnailUrl: string | null = null;
 
 		if (thumb) {
-			thumbnailUrl = InternalStorage.saveFromBuffer(thumbnailAccessKey, thumb.data);
+			thumbnailUrl = await InternalStorage.saveFromBufferAsync(thumbnailAccessKey, thumb.data);
 			logger.info(`thumbnail stored: ${thumbnailAccessKey}`);
 		}
 
