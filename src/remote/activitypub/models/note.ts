@@ -96,7 +96,7 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 		throw new Error('actor has been suspended');
 	}
 
-	const noteAudience = await parseAudience(actor, note.to, note.cc);
+	const noteAudience = await parseAudience(actor, note.to, note.cc, resolver);
 	let visibility = noteAudience.visibility;
 	const visibleUsers = noteAudience.visibleUsers;
 
@@ -108,7 +108,7 @@ export async function createNote(value: string | IObject, resolver?: Resolver, s
 		}
 	}
 
-	const apMentions = await extractApMentions(note.tag);
+	const apMentions = await extractApMentions(note.tag, resolver);
 
 	const apHashtags = await extractApHashtags(note.tag);
 
