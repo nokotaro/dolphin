@@ -2,11 +2,11 @@
  * Gulp tasks
  */
 
-import * as fs from 'fs';
-import * as gulp from 'gulp';
-import * as ts from 'gulp-typescript';
-import * as rimraf from 'rimraf';
-import * as rename from 'gulp-rename';
+const fs = require('fs');
+const gulp = require('gulp');
+const ts = require('gulp-typescript');
+const rimraf = require('rimraf');
+const rename = require('gulp-rename');
 const cleanCSS = require('gulp-clean-css');
 const sass = require('gulp-dart-sass');
 
@@ -67,7 +67,7 @@ gulp.task('copy:client', () =>
 			'./src/client/assets/**/*',
 		])
 			.pipe(rename(path => {
-				path.dirname = path.dirname!.replace('assets', '.');
+				path.dirname = path.dirname.replace('assets', '.');
 			}))
 			.pipe(gulp.dest('./built/client/assets/'))
 );
