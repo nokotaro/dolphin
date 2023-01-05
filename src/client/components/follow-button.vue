@@ -134,11 +134,11 @@ export default Vue.extend({
 	}
 
 	&:hover {
-		background: mix($primary, #fff, 20);
+		background: mix($primary, #fff, 20%);
 	}
 
 	&:active {
-		background: mix($primary, #fff, 40);
+		background: mix($primary, #fff, 40%);
 	}
 
 	&.active {
