@@ -4,23 +4,20 @@
 
 const fs = require('fs');
 const gulp = require('gulp');
-const ts = require('gulp-typescript');
+const swc = require('gulp-swc');
 const rimraf = require('rimraf');
 const rename = require('gulp-rename');
 const cleanCSS = require('gulp-clean-css');
 const sass = require('gulp-dart-sass');
 
 const locales = require('./locales');
+const swcOptions = JSON.parse(fs.readFileSync('.swcrc', 'utf-8'));
 
-gulp.task('build:ts', () => {
-	const tsProject = ts.createProject('./tsconfig.json');
-
-	return tsProject
-		.src()
-		.pipe(tsProject())
-		.on('error', () => {})
-		.pipe(gulp.dest('./built/'));
-});
+gulp.task('build:ts', () => 
+	gulp.src('src/**/*.ts')
+		.pipe(swc(swcOptions))
+		.pipe(gulp.dest('built'))
+);
 
 gulp.task('build:copy:views', () =>
 	gulp.src('./src/server/web/views/**/*').pipe(gulp.dest('./built/server/web/views'))
