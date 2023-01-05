@@ -4,7 +4,7 @@
 	"contributors": [
 		"syuilo <syuilotan@yahoo.co.jp>"
 	],
-	"version": "1.4.0-20221229110000",
+	"version": "1.4.0-20230105154231",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/mei23/dolphin.git"
@@ -26,7 +26,6 @@
 		"test": "TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true TS_NODE_COMPILER_OPTIONS=\"{\\\"target\\\":\\\"es2017\\\",\\\"module\\\":\\\"commonjs\\\",\\\"typeRoots\\\":[\\\"node_modules/@types\\\",\\\"src/@types\\\"]}\" mocha"
 	},
 	"resolutions": {
-		"lodash": "^4.17.21",
 		"source-map": "^0.7.4"
 	},
 	"dependencies": {
