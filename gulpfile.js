@@ -13,8 +13,11 @@ const sass = require('gulp-dart-sass');
 const locales = require('./locales');
 const swcOptions = JSON.parse(fs.readFileSync('.swcrc', 'utf-8'));
 
-gulp.task('build:ts', () => 
-	gulp.src('src/**/*.ts')
+gulp.task('build:ts', () =>
+	gulp.src([
+			'src/**/*.ts',
+			'!./src/client/app/**/*.ts'
+	])
 		.pipe(swc(swcOptions))
 		.pipe(gulp.dest('built'))
 );
