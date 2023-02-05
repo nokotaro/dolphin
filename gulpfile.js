@@ -2,25 +2,25 @@
  * Gulp tasks
  */
 
-import * as fs from 'fs';
-import * as gulp from 'gulp';
-import * as ts from 'gulp-typescript';
-import * as rimraf from 'rimraf';
-import * as rename from 'gulp-rename';
+const fs = require('fs');
+const gulp = require('gulp');
+const swc = require('gulp-swc');
+const rimraf = require('rimraf');
+const rename = require('gulp-rename');
 const cleanCSS = require('gulp-clean-css');
 const sass = require('gulp-dart-sass');
 
 const locales = require('./locales');
+const swcOptions = JSON.parse(fs.readFileSync('.swcrc', 'utf-8'));
 
-gulp.task('build:ts', () => {
-	const tsProject = ts.createProject('./tsconfig.json');
-
-	return tsProject
-		.src()
-		.pipe(tsProject())
-		.on('error', () => {})
-		.pipe(gulp.dest('./built/'));
-});
+gulp.task('build:ts', () =>
+	gulp.src([
+			'src/**/*.ts',
+			'!./src/client/app/**/*.ts'
+	])
+		.pipe(swc(swcOptions))
+		.pipe(gulp.dest('built'))
+);
 
 gulp.task('build:copy:views', () =>
 	gulp.src('./src/server/web/views/**/*').pipe(gulp.dest('./built/server/web/views'))
@@ -67,7 +67,7 @@ gulp.task('copy:client', () =>
 			'./src/client/assets/**/*',
 		])
 			.pipe(rename(path => {
-				path.dirname = path.dirname!.replace('assets', '.');
+				path.dirname = path.dirname.replace('assets', '.');
 			}))
 			.pipe(gulp.dest('./built/client/assets/'))
 );
