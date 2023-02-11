@@ -6,6 +6,7 @@ import { toPuny } from '../../misc/convert-host';
 import { ensure } from '../../prelude/ensure';
 import { awaitAll } from '../../prelude/await-all';
 import { SchemaType } from '../../misc/schema';
+import { sanitizeUrl } from '../../misc/sanitize-url';
 
 export type PackedDriveFile = SchemaType<typeof packedDriveFileSchema>;
 
@@ -91,8 +92,8 @@ export class DriveFileRepository extends Repository<DriveFile> {
 			size: file.size,
 			isSensitive: file.isSensitive,
 			properties: file.properties,
-			url: opts.self ? file.url : this.getPublicUrl(file, false),
-			thumbnailUrl: this.getPublicUrl(file, true),
+			url: sanitizeUrl(opts.self ? file.url : this.getPublicUrl(file, false)) || null,
+			thumbnailUrl: sanitizeUrl(this.getPublicUrl(file, true)),
 			folderId: file.folderId,
 			folder: opts.detail && file.folderId ? DriveFolders.pack(file.folderId, {
 				detail: true
