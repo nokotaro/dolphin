@@ -47,6 +47,7 @@ export default Vue.extend({
 	},
 	created() {
 		const url = new URL(this.url);
+		if (!['http:', 'https:'].includes(url.protocol)) throw new Error('invalid url');
 		this.schema = url.protocol;
 		this.hostname = decodePunycode(url.hostname);
 		this.port = url.port;
