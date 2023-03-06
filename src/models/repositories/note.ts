@@ -8,6 +8,7 @@ import { awaitAll } from '../../prelude/await-all';
 import { Emoji } from '../entities/emoji';
 import { decodeReaction, convertLegacyReactions, convertLegacyReaction } from '../../misc/reaction-lib';
 import { concat } from '../../prelude/array';
+import { sanitizeUrl } from '../../misc/sanitize-url';
 
 export type PackedNote = SchemaType<typeof packedNoteSchema>;
 
@@ -152,7 +153,7 @@ export class NoteRepository extends Repository<Note> {
 				}).then(emojis => emojis.map((emoji: Emoji) => {
 					return {
 						name: emoji.name,
-						url: emoji.url,
+						url: sanitizeUrl(emoji.url),
 					};
 				}));
 
@@ -177,7 +178,7 @@ export class NoteRepository extends Repository<Note> {
 				}).then(emojis => emojis.map((emoji: Emoji) => {
 					return {
 						name: `${emoji.name}@${emoji.host || '.'}`,	// @host付きでローカルは.
-						url: emoji.url,
+						url: sanitizeUrl(emoji.url),
 					};
 				}));
 				all = concat([all, tmp]);
@@ -224,7 +225,7 @@ export class NoteRepository extends Repository<Note> {
 			replyId: note.replyId,
 			renoteId: note.renoteId,
 			mentions: note.mentions.length > 0 ? note.mentions : undefined,
-			uri: note.uri || undefined,
+			uri: sanitizeUrl(note.uri) || undefined,
 
 			...(opts.detail ? {
 				reply: note.replyId ? this.pack(note.replyId, meId, {
